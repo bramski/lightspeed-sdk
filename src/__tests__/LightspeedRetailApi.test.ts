@@ -1,9 +1,9 @@
-const nock = require('nock');
-const Lightspeed = require('../clients/LightspeedRetailApi');
+import LightspeedRetailApi from '../clients/LightspeedRetailApi';
+import nock = require("nock");
 
-describe('Lightspeed Retail Api', () => {
+describe('LightspeedRetailApi Retail Api', () => {
   it('has all the methods available', () => {
-    const lightspeed = new Lightspeed({
+    const lightspeed = new LightspeedRetailApi({
       clientId: 'client',
       clientSecret: 'secret',
       refreshToken: 'token',
@@ -44,35 +44,11 @@ describe('Lightspeed Retail Api', () => {
     expect(typeof lightspeed.putCustomer).toBe('function');
   });
 
-  describe('validates constructor values', () => {
-    const clientId = 'client';
-    const clientSecret = 'secret';
-    const refreshToken = 'token';
-
-    it('clientId', () => {
-      expect(() => new Lightspeed({ clientSecret, refreshToken })).toThrowError(
-        'Param clientId is required'
-      );
-    });
-
-    it('clientSecret', () => {
-      expect(() => new Lightspeed({ clientId, refreshToken })).toThrowError(
-        'Param clientSecret is required'
-      );
-    });
-
-    it('refreshToken', () => {
-      expect(() => new Lightspeed({ clientId, clientSecret })).toThrowError(
-        'Param refreshToken is required'
-      );
-    });
-  });
-
   describe('manages rate limit properly', () => {
     let lightspeed;
 
     beforeAll(() => {
-      lightspeed = new Lightspeed({
+      lightspeed = new LightspeedRetailApi({
         clientId: 'client',
         clientSecret: 'secret',
         refreshToken: 'token',
@@ -129,7 +105,7 @@ describe('Lightspeed Retail Api', () => {
   });
 
   it('generates access token', async () => {
-    const lightspeed = new Lightspeed({
+    const lightspeed = new LightspeedRetailApi({
       clientId: 'client',
       clientSecret: 'secret',
       refreshToken: 'token',
@@ -152,7 +128,7 @@ describe('Lightspeed Retail Api', () => {
   describe('validates paginated endpoints', () => {
     describe('for Items', () => {
       it('iterates over generator', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -169,7 +145,7 @@ describe('Lightspeed Retail Api', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Item.json?load_relations=%5B%22ItemShops%22%2C%20%22Images%22%2C%20%22Manufacturer%22%5D&offset=0&limit=100'
+            '/API/Account/12345/Item.json?load_relations=%5B%22ItemShops%22%2C%20%22Images%22%2C%20%22Manufacturer%22%5D&offset=0&limit=100'
           )
           .reply(200, {
             '@attributes': {
@@ -190,7 +166,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = lightspeed.getItems('testAccount');
+        const response = lightspeed.getItems(12345);
 
         const elements = [];
         for await (const item of response) {
@@ -205,7 +181,7 @@ describe('Lightspeed Retail Api', () => {
       });
 
       it('iterates over array with toArray()', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -222,7 +198,7 @@ describe('Lightspeed Retail Api', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Item.json?load_relations=%5B%22ItemShops%22%2C%20%22Images%22%2C%20%22Manufacturer%22%5D&offset=0&limit=100'
+            '/API/Account/12345/Item.json?load_relations=%5B%22ItemShops%22%2C%20%22Images%22%2C%20%22Manufacturer%22%5D&offset=0&limit=100'
           )
           .reply(200, {
             '@attributes': {
@@ -243,7 +219,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const elements = await lightspeed.getItems('testAccount').toArray();
+        const elements = await lightspeed.getItems(12345).toArray();
 
         expect(elements.length).toEqual(3);
         expect(elements[0].itemID).toEqual('1');
@@ -254,7 +230,7 @@ describe('Lightspeed Retail Api', () => {
 
     describe('for Categories', () => {
       it('iterates over generator', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -270,7 +246,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.merchantos.com')
-          .get('/API/Account/testAccount/Category.json?offset=0&limit=100')
+          .get('/API/Account/12345/Category.json?offset=0&limit=100')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -290,7 +266,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = await lightspeed.getCategories('testAccount');
+        const response = await lightspeed.getCategories(12345);
 
         const elements = [];
         for await (const item of response) {
@@ -304,7 +280,7 @@ describe('Lightspeed Retail Api', () => {
       });
 
       it('iterates over array with toArray()', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -320,7 +296,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.merchantos.com')
-          .get('/API/Account/testAccount/Category.json?offset=0&limit=100')
+          .get('/API/Account/12345/Category.json?offset=0&limit=100')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -340,7 +316,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const elements = await lightspeed.getCategories('testAccount').toArray();
+        const elements = await lightspeed.getCategories(12345).toArray();
 
         expect(elements.length).toEqual(3);
         expect(elements[0].categoryID).toEqual('1');
@@ -351,7 +327,7 @@ describe('Lightspeed Retail Api', () => {
 
     describe('for Manufacturers', () => {
       it('iterates over generator', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -367,7 +343,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.merchantos.com')
-          .get('/API/Account/testAccount/Manufacturer.json?offset=0&limit=100')
+          .get('/API/Account/12345/Manufacturer.json?offset=0&limit=100')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -387,7 +363,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = await lightspeed.getManufacturers('testAccount');
+        const response = await lightspeed.getManufacturers(12345);
 
         const elements = [];
         for await (const item of response) {
@@ -401,7 +377,7 @@ describe('Lightspeed Retail Api', () => {
       });
 
       it('iterates over array with toArray()', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -417,7 +393,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.merchantos.com')
-          .get('/API/Account/testAccount/Manufacturer.json?offset=0&limit=100')
+          .get('/API/Account/12345/Manufacturer.json?offset=0&limit=100')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -437,7 +413,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const elements = await lightspeed.getManufacturers('testAccount').toArray();
+        const elements = await lightspeed.getManufacturers(12345).toArray();
 
         expect(elements.length).toEqual(3);
         expect(elements[0].manufacturerID).toEqual('1');
@@ -448,7 +424,7 @@ describe('Lightspeed Retail Api', () => {
 
     describe('for Customers', () => {
       it('iterates over generator', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -465,7 +441,7 @@ describe('Lightspeed Retail Api', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Customer.json?load_relations=%5B%22Contact%22%2C%20%22CustomFieldValues%22%5D&offset=0&limit=100'
+            '/API/Account/12345/Customer.json?load_relations=%5B%22Contact%22%2C%20%22CustomFieldValues%22%5D&offset=0&limit=100'
           )
           .reply(200, {
             '@attributes': {
@@ -486,7 +462,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = await lightspeed.getCustomers('testAccount');
+        const response = await lightspeed.getCustomers(12345);
 
         const elements = [];
         for await (const item of response) {
@@ -500,7 +476,7 @@ describe('Lightspeed Retail Api', () => {
       });
 
       it('iterates over array with toArray()', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -517,7 +493,7 @@ describe('Lightspeed Retail Api', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Customer.json?load_relations=%5B%22Contact%22%2C%20%22CustomFieldValues%22%5D&offset=0&limit=100'
+            '/API/Account/12345/Customer.json?load_relations=%5B%22Contact%22%2C%20%22CustomFieldValues%22%5D&offset=0&limit=100'
           )
           .reply(200, {
             '@attributes': {
@@ -538,7 +514,55 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const elements = await lightspeed.getCustomers('testAccount').toArray();
+        const elements = await lightspeed.getCustomers(12345).toArray();
+
+        expect(elements.length).toEqual(3);
+        expect(elements[0].customerID).toEqual('1');
+        expect(elements[1].customerID).toEqual('2');
+        expect(elements[2].customerID).toEqual('3');
+      });
+
+      it('allows search Params', async () => {
+        const lightspeed = new LightspeedRetailApi({
+          clientId: 'client',
+          clientSecret: 'secret',
+          refreshToken: 'token',
+        });
+
+        nock('https://cloud.merchantos.com')
+          .post(/.*/, (body) => true)
+          .reply(200, {
+            access_token: 'access_token',
+            expires_in: 1800,
+            token_type: 'bearer',
+            scope: 'employee:all',
+          });
+
+        nock('https://api.merchantos.com')
+          .get(
+            '/API/Account/12345/Customer.json?load_relations=%5B%22Contact%22%2C%20%22CustomFieldValues%22%5D&title=~%2C%25Barf%25&lastName=Sagat&firstName=Bob&offset=0&limit=100'
+          )
+          .reply(200, {
+            '@attributes': {
+              count: '1',
+              offset: '0',
+              limit: '100',
+            },
+            Customer: [
+              {
+                customerID: '1',
+              },
+              {
+                customerID: '2',
+              },
+              {
+                customerID: '3',
+              },
+            ],
+          });
+
+        const elements = await lightspeed.getCustomers(12345,
+          {firstName: 'Bob', lastName: ['=', 'Sagat'], title: ['~', "%Barf%"]}).toArray();
 
         expect(elements.length).toEqual(3);
         expect(elements[0].customerID).toEqual('1');
@@ -549,7 +573,7 @@ describe('Lightspeed Retail Api', () => {
 
     describe('for Customer Types', () => {
       it('iterates over generator', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -565,7 +589,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.merchantos.com')
-          .get('/API/Account/testAccount/CustomerType.json?offset=0&limit=100')
+          .get('/API/Account/12345/CustomerType.json?offset=0&limit=100')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -585,7 +609,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = await lightspeed.getCustomerTypes('testAccount');
+        const response = await lightspeed.getCustomerTypes(12345);
 
         const elements = [];
         for await (const item of response) {
@@ -599,7 +623,7 @@ describe('Lightspeed Retail Api', () => {
       });
 
       it('iterates over array with toArray()', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -615,7 +639,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.merchantos.com')
-          .get('/API/Account/testAccount/CustomerType.json?offset=0&limit=100')
+          .get('/API/Account/12345/CustomerType.json?offset=0&limit=100')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -635,7 +659,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const elements = await lightspeed.getCustomerTypes('testAccount').toArray();
+        const elements = await lightspeed.getCustomerTypes(12345).toArray();
 
         expect(elements.length).toEqual(3);
         expect(elements[0].customerTypeID).toEqual('1');
@@ -646,7 +670,7 @@ describe('Lightspeed Retail Api', () => {
 
     describe('for Sales', () => {
       it('iterates over generator', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -663,7 +687,7 @@ describe('Lightspeed Retail Api', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%2C%22Discount%22%2C%22Customer.Contact%22%5D&offset=0&limit=100'
+            '/API/Account/12345/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%2C%22Discount%22%2C%22Customer.Contact%22%5D&offset=0&limit=100'
           )
           .reply(200, {
             '@attributes': {
@@ -684,7 +708,7 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = await lightspeed.getSales('testAccount');
+        const response = await lightspeed.getSales(12345);
 
         const elements = [];
         for await (const item of response) {
@@ -698,7 +722,7 @@ describe('Lightspeed Retail Api', () => {
       });
 
       it('iterates over array with toArray()', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -715,7 +739,7 @@ describe('Lightspeed Retail Api', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%2C%22Discount%22%2C%22Customer.Contact%22%5D&offset=0&limit=100'
+            '/API/Account/12345/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%2C%22Discount%22%2C%22Customer.Contact%22%5D&offset=0&limit=100'
           )
           .reply(200, {
             '@attributes': {
@@ -736,20 +760,65 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const elements = await lightspeed.getSales('testAccount').toArray();
+        const elements = await lightspeed.getSales(12345).toArray();
 
         expect(elements.length).toEqual(3);
         expect(elements[0].saleID).toEqual('1');
         expect(elements[1].saleID).toEqual('2');
         expect(elements[2].saleID).toEqual('3');
       });
+      //
+      // it('getSale', async () => {
+      //   const climbOnClientId = '1544c7bd-d726-4989-b18f-5e56c8d65f4a';
+      //   const climbOnClientSecret = '861e1845-c2f0-485c-9f38-33b8af2f75fc';
+      //   const climbOnRefreshToken = 'c991615a8e254607b4c075d254bc01a4e211b32b';
+      //   const lightspeed = new LightspeedRetailApi({
+      //     clientId: climbOnClientId,
+      //     clientSecret: climbOnClientSecret,
+      //     refreshToken: climbOnRefreshToken,
+      //   });
+      //
+      //   // nock('https://cloud.merchantos.com')
+      //   //   .post(/.*/, (body) => true)
+      //   //   .reply(200, {
+      //   //     access_token: 'access_token',
+      //   //     expires_in: 1800,
+      //   //     token_type: 'bearer',
+      //   //     scope: 'employee:all',
+      //   //   });
+      //   //
+      //   // nock('https://api.merchantos.com')
+      //   //   .get(
+      //   //     '/API/Account/12345/Sale.json?load_relations=%5B%22TaxCategory%22%2C%22SaleLines%22%2C%22SaleLines.Item%22%2C%22SalePayments%22%2C%22SalePayments.PaymentType%22%2C%22Customer%22%2C%22Discount%22%2C%22Customer.Contact%22%5D&offset=0&limit=100'
+      //   //   )
+      //   //   .reply(200, {
+      //   //     '@attributes': {
+      //   //       count: '1',
+      //   //       offset: '0',
+      //   //       limit: '100',
+      //   //     },
+      //   //     Sale: [
+      //   //       {
+      //   //         saleID: '1',
+      //   //       },
+      //   //       {
+      //   //         saleID: '2',
+      //   //       },
+      //   //       {
+      //   //         saleID: '3',
+      //   //       },
+      //   //     ],
+      //   //   });
+      //
+      //   const sale = await lightspeed.getSale(92375, 206195);
+      // });
     });
   });
 
   describe('validates one result endpoints', () => {
     describe('for Item', () => {
-      it('gets the Item with an specific ID', async () => {
-        const lightspeed = new Lightspeed({
+      it('gets the Item with a specific ID', async () => {
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -766,7 +835,7 @@ describe('Lightspeed Retail Api', () => {
 
         nock('https://api.merchantos.com')
           .get(
-            '/API/Account/testAccount/Item/1.json?load_relations=[%22ItemShops%22,%20%22Images%22,%20%22Manufacturer%22,%20%22CustomFieldValues%22,%20%22CustomFieldValues.value%22]'
+            '/API/Account/12345/Item/1.json?load_relations=%5B%22ItemShops%22%2C%22Images%22%2C%22Manufacturer%22%2C%22CustomFieldValues%22%2C%22CustomFieldValues.value%22%5D'
           )
           .reply(200, {
             '@attributes': {
@@ -779,12 +848,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getItemById('testAccount', '1');
-        expect(response.Item.itemID).toEqual('1');
+        const item = await lightspeed.getItemById(12345, '1');
+        expect(item.itemID).toEqual('1');
       });
 
       it('gets the Item Matrix with an specific ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -800,7 +869,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/ItemMatrix/1.json')
+          .get('/API/Account/12345/ItemMatrix/1.json')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -812,12 +881,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getItemMatrixByID('testAccount', '1');
+        const response = await lightspeed.getItemMatrixByID(12345, '1');
         expect(response.ItemMatrix.itemMatrixID).toEqual('1');
       });
 
       it('gets the Items from an specific Matrix ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -833,7 +902,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/Item.json?itemMatrixID=1')
+          .get('/API/Account/12345/Item.json?itemMatrixID=1')
           .reply(200, {
             '@attributes': {
               count: '2',
@@ -850,14 +919,14 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = await lightspeed.getItemsByMatrixID('testAccount', '1');
+        const response = await lightspeed.getItemsByMatrixID(12345, '1');
         expect(response.Item.length).toEqual(2);
         expect(response.Item[0].itemID).toEqual('1');
         expect(response.Item[1].itemID).toEqual('2');
       });
 
       it('gets the Items from an specific Custom Sku', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -873,7 +942,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/Item.json?customSku=1')
+          .get('/API/Account/12345/Item.json?customSku=1')
           .reply(200, {
             '@attributes': {
               count: '2',
@@ -885,14 +954,14 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getItemByCustomSku('testAccount', '1');
+        const response = await lightspeed.getItemByCustomSku(12345, '1');
         expect(response.Item.customSku).toEqual('1');
       });
     });
 
     describe('for Customer', () => {
       it('gets the Customer with an specific ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -909,7 +978,7 @@ describe('Lightspeed Retail Api', () => {
 
         nock('https://api.lightspeedapp.com')
           .get(
-            '/API/Account/testAccount/Customer/1.json?load_relations=[%22CustomFieldValues%22,%20%22CustomFieldValues.value%22]'
+            '/API/Account/12345/Customer/1.json?load_relations=[%22CustomFieldValues%22,%20%22CustomFieldValues.value%22]'
           )
           .reply(200, {
             '@attributes': {
@@ -922,12 +991,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getCustomerByID('testAccount', '1');
+        const response = await lightspeed.getCustomerByID(12345, '1');
         expect(response.Customer.customerID).toEqual('1');
       });
 
       it('gets the Customers Contact with an specific ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -943,7 +1012,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/Contact/1.json')
+          .get('/API/Account/12345/Contact/1.json')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -955,14 +1024,14 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getContactByID('testAccount', '1');
+        const response = await lightspeed.getContactByID(12345, '1');
         expect(response.Contact.contactID).toEqual('1');
       });
     });
 
     describe('for Sale', () => {
       it('gets the Sale Payment with an specific ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -978,7 +1047,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/SalePayment/1.json')
+          .get('/API/Account/12345/SalePayment/1.json')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -990,12 +1059,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getSalePaymentByID('testAccount', '1');
+        const response = await lightspeed.getSalePaymentByID(12345, '1');
         expect(response.SalePayment.salePaymentID).toEqual('1');
       });
 
       it('gets the Sale Payments with an specific Sale ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1011,7 +1080,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/SalePayment.json?saleID=1')
+          .get('/API/Account/12345/SalePayment.json?saleID=1')
           .reply(200, {
             '@attributes': {
               count: '2',
@@ -1028,14 +1097,14 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = await lightspeed.getSalePaymentBySaleID('testAccount', '1');
+        const response = await lightspeed.getSalePaymentBySaleID(12345, '1');
         expect(response.SalePayment.length).toEqual(2);
         expect(response.SalePayment[0].salePaymentID).toEqual('1');
         expect(response.SalePayment[1].salePaymentID).toEqual('2');
       });
 
       it('gets the Sale Line with an specific Sale ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1051,7 +1120,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/SaleLine.json?saleID=1')
+          .get('/API/Account/12345/SaleLine.json?saleID=1')
           .reply(200, {
             '@attributes': {
               count: '2',
@@ -1068,14 +1137,14 @@ describe('Lightspeed Retail Api', () => {
             ],
           });
 
-        const response = await lightspeed.getSaleLineBySaleID('testAccount', '1');
+        const response = await lightspeed.getSaleLineBySaleID(12345, '1');
         expect(response.SaleLine.length).toEqual(2);
         expect(response.SaleLine[0].saleLineID).toEqual('1');
         expect(response.SaleLine[1].saleLineID).toEqual('2');
       });
 
       it('gets the Sale Line with an specific ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1091,7 +1160,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/SaleLine/1.json')
+          .get('/API/Account/12345/SaleLine/1.json')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1103,12 +1172,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getSaleLineByID('testAccount', '1');
+        const response = await lightspeed.getSaleLineByID(12345, '1');
         expect(response.SaleLine.saleLineID).toEqual('1');
       });
 
       it('gets the Sale Payment Type with an specific ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1124,7 +1193,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/PaymentType/1.json')
+          .get('/API/Account/12345/PaymentType/1.json')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1136,12 +1205,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getPaymentTypeByID('testAccount', '1');
+        const response = await lightspeed.getPaymentTypeByID(12345, '1');
         expect(response.PaymentType.paymentTypeID).toEqual('1');
       });
 
       it('gets the Sales Shop with an specific ID', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1157,7 +1226,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .get('/API/Account/testAccount/Shop/1.json')
+          .get('/API/Account/12345/Shop/1.json')
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1169,7 +1238,7 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.getShopByID('testAccount', '1');
+        const response = await lightspeed.getShopByID(12345, '1');
         expect(response.Shop.shopID).toEqual('1');
       });
     });
@@ -1178,7 +1247,7 @@ describe('Lightspeed Retail Api', () => {
   describe('validates post endpoints', () => {
     describe('for Customer', () => {
       it('posts a Customer', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1194,7 +1263,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .post('/API/Account/testAccount/Customer.json', (body) => true)
+          .post('/API/Account/12345/Customer.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1206,12 +1275,13 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.postCustomer('testAccount', { customerID: '1' });
-        expect(response.Customer.customerID).toEqual('1');
+        const response = await lightspeed.postCustomer(12345,
+          {firstName: 'Bob', lastName: "Sagat"});
+        expect(response.customerID).toEqual('1');
       });
 
-      it('posts a Customer Type', async () => {
-        const lightspeed = new Lightspeed({
+      it('posts a Sale', async () => {
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1227,7 +1297,41 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .post('/API/Account/testAccount/CustomerType.json', (body) => true)
+          .post('/API/Account/12345/Sale.json', (body) => true)
+          .reply(200, {
+            '@attributes': {
+              count: '1',
+              offset: '0',
+              limit: '100',
+            },
+            Sale: {
+              saleID: '1',
+            },
+          });
+
+        // @ts-ignore
+        const response = await lightspeed.postSale(12345, {completed: true});
+        expect(response.saleID).toEqual('1');
+      });
+
+      it('posts a Customer Type', async () => {
+        const lightspeed = new LightspeedRetailApi({
+          clientId: 'client',
+          clientSecret: 'secret',
+          refreshToken: 'token',
+        });
+
+        nock('https://cloud.merchantos.com')
+          .post(/.*/, (body) => true)
+          .reply(200, {
+            access_token: 'access_token',
+            expires_in: 1800,
+            token_type: 'bearer',
+            scope: 'employee:all',
+          });
+
+        nock('https://api.lightspeedapp.com')
+          .post('/API/Account/12345/CustomerType.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1239,12 +1343,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.postCustomerType('testAccount', { customerTypeID: '1' });
+        const response = await lightspeed.postCustomerType(12345, {customerTypeID: '1'});
         expect(response.CustomerType.customerTypeID).toEqual('1');
       });
 
       it('posts a Customer Custom Field', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1260,7 +1364,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .post('/API/Account/testAccount/Customer/CustomField.json', (body) => true)
+          .post('/API/Account/12345/Customer/CustomField.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1272,7 +1376,7 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.postCustomerCustomField('testAccount', {
+        const response = await lightspeed.postCustomerCustomField(12345, {
           customFieldID: '1',
         });
         expect(response.CustomField.customFieldID).toEqual('1');
@@ -1281,7 +1385,7 @@ describe('Lightspeed Retail Api', () => {
 
     describe('for Item', () => {
       it('posts an Item', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1297,7 +1401,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .post('/API/Account/testAccount/Item.json', (body) => true)
+          .post('/API/Account/12345/Item.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1309,12 +1413,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.postItem('testAccount', { itemID: '1' });
+        const response = await lightspeed.postItem(12345, {itemID: '1'});
         expect(response.Item.itemID).toEqual('1');
       });
 
       it('posts an Item Attribute Set', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1330,7 +1434,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .post('/API/Account/testAccount/ItemAttributeSet.json', (body) => true)
+          .post('/API/Account/12345/ItemAttributeSet.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1342,14 +1446,14 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.postItemAttributeSet('testAccount', {
+        const response = await lightspeed.postItemAttributeSet(12345, {
           itemAttributeSetID: '1',
         });
         expect(response.ItemAttributeSet.itemAttributeSetID).toEqual('1');
       });
 
       it('posts an Item Matrix', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1365,7 +1469,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .post('/API/Account/testAccount/ItemMatrix.json', (body) => true)
+          .post('/API/Account/12345/ItemMatrix.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1377,12 +1481,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.postItemMatrix('testAccount', { itemMatrixID: '1' });
+        const response = await lightspeed.postItemMatrix(12345, {itemMatrixID: '1'});
         expect(response.ItemMatrix.itemMatrixID).toEqual('1');
       });
 
       it('posts an Item Custom Field', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1398,7 +1502,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .post('/API/Account/testAccount/Item/CustomField.json', (body) => true)
+          .post('/API/Account/12345/Item/CustomField.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1410,7 +1514,7 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.postItemCustomField('testAccount', {
+        const response = await lightspeed.postItemCustomField(12345, {
           customFieldID: '1',
         });
         expect(response.CustomField.customFieldID).toEqual('1');
@@ -1419,7 +1523,7 @@ describe('Lightspeed Retail Api', () => {
 
     describe('for Sale', () => {
       it('posts a Sale Payment Type', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1435,7 +1539,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .post('/API/Account/testAccount/PaymentType.json', (body) => true)
+          .post('/API/Account/12345/PaymentType.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1447,7 +1551,7 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.postPaymentMethod('testAccount', { paymentTypeID: '1' });
+        const response = await lightspeed.postPaymentMethod(12345, {paymentTypeID: '1'});
         expect(response.PaymentType.paymentTypeID).toEqual('1');
       });
     });
@@ -1456,7 +1560,7 @@ describe('Lightspeed Retail Api', () => {
   describe('validates update endpoints', () => {
     describe('for Customer', () => {
       it('updates a Customer', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1472,7 +1576,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .put('/API/Account/testAccount/Customer/1.json', (body) => true)
+          .put('/API/Account/12345/Customer/1.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1484,14 +1588,14 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.putCustomer('testAccount', { customerID: '1' }, '1');
+        const response = await lightspeed.putCustomer(12345, {customerID: '1'}, '1');
         expect(response.Customer.customerID).toEqual('1');
       });
     });
 
     describe('for Item', () => {
       it('updates an Item', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1507,7 +1611,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .put('/API/Account/testAccount/Item/1.json', (body) => true)
+          .put('/API/Account/12345/Item/1.json', (body) => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1519,12 +1623,12 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.putItem('testAccount', { itemID: '1' }, '1');
+        const response = await lightspeed.putItem(12345, {itemID: '1'}, '1');
         expect(response.Item.itemID).toEqual('1');
       });
 
       it('updates an Item Matrix', async () => {
-        const lightspeed = new Lightspeed({
+        const lightspeed = new LightspeedRetailApi({
           clientId: 'client',
           clientSecret: 'secret',
           refreshToken: 'token',
@@ -1540,7 +1644,7 @@ describe('Lightspeed Retail Api', () => {
           });
 
         nock('https://api.lightspeedapp.com')
-          .put('/API/Account/testAccount/ItemMatrix/1.json', (body) => true)
+          .put('/API/Account/12345/ItemMatrix/1.json', () => true)
           .reply(200, {
             '@attributes': {
               count: '1',
@@ -1552,7 +1656,7 @@ describe('Lightspeed Retail Api', () => {
             },
           });
 
-        const response = await lightspeed.putItemMatrix('testAccount', { itemMatrixID: '1' }, '1');
+        const response = await lightspeed.putItemMatrix(12345, {itemMatrixID: '1'}, '1');
         expect(response.ItemMatrix.itemMatrixID).toEqual('1');
       });
     });
