@@ -239,3 +239,45 @@ export type ProductVariant = {
   weightUnit: string;
   weightValue: string;
 };
+
+export type ProductImage = {
+  createdAt: string;
+  extension: string;
+  size: number;
+  src: string;
+  thumb: string;
+  title: string;
+  updatedAt: string;
+};
+
+export type Product = {
+  attributes: ResourceLink;
+  brand: ResourceLink;
+  categories: ResourceLink;
+  content: string;
+  createdAt: string;
+  data01: string;
+  data02: string;
+  data03: string;
+  deliverydate: ResourceLink;
+  description: string;
+  fulltitle: string;
+  hasMatrix: boolean;
+  id: number;
+  image: ProductImage;
+  images: ResourceLink;
+  isVisible: boolean;
+  metafields: ResourceLink;
+  movements: ResourceLink;
+  relations: ResourceLink;
+  reviews: ResourceLink;
+  set: false;
+  supplier: false;
+  tags: ResourceLink;
+  title: string;
+  type: ResourceLink;
+  updatedAt: string;
+  url: string;
+  variants: ResourceLink;
+  visibility: string;
+};
