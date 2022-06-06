@@ -22,6 +22,37 @@ export type CustomerSearchParams = {
   [k in CustomerParams]?: SearchParam | string;
 };
 
+export type ItemParams =
+  | 'archived'
+  | 'avgCost'
+  | 'categoryID'
+  | 'createTime'
+  | 'customSku'
+  | 'defaultCost'
+  | 'defaultVendorID'
+  | 'departmentID'
+  | 'description'
+  | 'discountable'
+  | 'ean'
+  | 'itemID'
+  | 'itemMatrixID'
+  | 'itemType'
+  | 'manufacturerID'
+  | 'manufacturerSku'
+  | 'modelYear'
+  | 'publishToEcom:'
+  | 'seasonID'
+  | 'serialized:'
+  | 'systemSku'
+  | 'tax'
+  | 'taxClassID'
+  | 'timeStamp'
+  | 'upc';
+
+export type ItemsSearchParams = {
+  [k in ItemParams]?: SearchParam | string;
+};
+
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 export type PostCustomer = Optional<

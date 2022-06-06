@@ -4,6 +4,7 @@ import {
   Customer,
   CustomerSearchParams,
   Item,
+  ItemsSearchParams,
   PaymentType,
   PostCustomer,
   PostSale,
@@ -677,10 +678,15 @@ class LightspeedRetailApi {
     return new RetailApiCursor(url, 'Manufacturer', this);
   }
 
-  getItems(accountId) {
+  getItems(
+    accountId,
+    itemsSearchParams: ItemsSearchParams = {},
+    load_relations: string = '["ItemShops", "Images", "Manufacturer"]'
+  ): RetailApiCursor<Item> {
     const url = `https://api.merchantos.com/API/Account/${accountId}/Item.json`;
     return new RetailApiCursor(url, 'Item', this, {
-      load_relations: '["ItemShops", "Images", "Manufacturer"]',
+      load_relations,
+      ...searchParamsToQueryParams(itemsSearchParams),
     });
   }
 
