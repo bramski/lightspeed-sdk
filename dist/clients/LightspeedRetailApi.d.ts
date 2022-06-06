@@ -1,4 +1,4 @@
-import { AccessTokenResponse, Customer, CustomerSearchParams, Item, PaymentType, PostCustomer, PostSale, Sale, TaxCategory } from './RetailApiTypes';
+import { AccessTokenResponse, Customer, CustomerSearchParams, Item, ItemsSearchParams, PaymentType, PostCustomer, PostSale, Sale, TaxCategory } from './RetailApiTypes';
 import RetailApiCursor from '../utils/RetailApiCursor';
 declare type ConstructorOptions = {
     clientId: string;
@@ -48,7 +48,7 @@ declare class LightspeedRetailApi {
     getItemById(accountId: any, itemId: any, loadRelations?: string[]): Promise<Item>;
     getCategories(accountId: any): RetailApiCursor<any>;
     getManufacturers(accountId: any): RetailApiCursor<any>;
-    getItems(accountId: any): RetailApiCursor<any>;
+    getItems(accountId: any, itemsSearchParams?: ItemsSearchParams, load_relations?: string): RetailApiCursor<Item>;
     getPaymentTypes(accountId: any): RetailApiCursor<PaymentType>;
     getCustomers(accountId: any, customersSearchParams?: CustomerSearchParams): RetailApiCursor<Customer>;
     getCustomerTypes(accountId: any): RetailApiCursor<any>;

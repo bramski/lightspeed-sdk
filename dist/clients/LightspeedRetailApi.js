@@ -989,11 +989,11 @@ var LightspeedRetailApi = /** @class */ (function () {
         var url = "https://api.merchantos.com/API/Account/".concat(accountId, "/Manufacturer.json");
         return new RetailApiCursor_1.default(url, 'Manufacturer', this);
     };
-    LightspeedRetailApi.prototype.getItems = function (accountId) {
+    LightspeedRetailApi.prototype.getItems = function (accountId, itemsSearchParams, load_relations) {
+        if (itemsSearchParams === void 0) { itemsSearchParams = {}; }
+        if (load_relations === void 0) { load_relations = '["ItemShops", "Images", "Manufacturer"]'; }
         var url = "https://api.merchantos.com/API/Account/".concat(accountId, "/Item.json");
-        return new RetailApiCursor_1.default(url, 'Item', this, {
-            load_relations: '["ItemShops", "Images", "Manufacturer"]',
-        });
+        return new RetailApiCursor_1.default(url, 'Item', this, __assign({ load_relations: load_relations }, searchParamsToQueryParams(itemsSearchParams)));
     };
     LightspeedRetailApi.prototype.getPaymentTypes = function (accountId) {
         var url = "https://api.merchantos.com/API/Account/".concat(accountId, "/PaymentType.json");

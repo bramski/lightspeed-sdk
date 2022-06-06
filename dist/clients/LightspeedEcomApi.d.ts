@@ -1,5 +1,5 @@
 import EcomApiCursor from '../utils/EcomApiCursor';
-import { Account, Order, OrderProduct, ProductVariant } from './EcomTypes';
+import { Account, Order, OrderProduct, Product, ProductVariant } from './EcomTypes';
 declare type ClusterId = 'eu1' | 'EU1' | 'us1' | 'US1';
 declare type AllowedOptions = {
     apiKey: string;
@@ -16,5 +16,6 @@ declare class LightspeedEcomApi {
     getOrderProducts(orderId: number): EcomApiCursor<OrderProduct>;
     getProductVariants(productId: number): Promise<ProductVariant[]>;
     getVariant(variantId: number): Promise<ProductVariant>;
+    getProduct(productId: number): Promise<Product>;
 }
 export default LightspeedEcomApi;

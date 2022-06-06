@@ -150,6 +150,19 @@ var LightspeedEcomApi = /** @class */ (function () {
             });
         });
     };
+    LightspeedEcomApi.prototype.getProduct = function (productId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var response;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.axiosClient.get("products/".concat(productId, ".json"))];
+                    case 1:
+                        response = _a.sent();
+                        return [2 /*return*/, response.data.product];
+                }
+            });
+        });
+    };
     return LightspeedEcomApi;
 }());
 exports.default = LightspeedEcomApi;

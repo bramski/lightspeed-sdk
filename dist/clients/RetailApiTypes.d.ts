@@ -4,6 +4,10 @@ export declare type CustomerParams = 'firstName' | 'lastName' | 'dob' | 'archive
 export declare type CustomerSearchParams = {
     [k in CustomerParams]?: SearchParam | string;
 };
+export declare type ItemParams = 'archived' | 'avgCost' | 'categoryID' | 'createTime' | 'customSku' | 'defaultCost' | 'defaultVendorID' | 'departmentID' | 'description' | 'discountable' | 'ean' | 'itemID' | 'itemMatrixID' | 'itemType' | 'manufacturerID' | 'manufacturerSku' | 'modelYear' | 'publishToEcom:' | 'seasonID' | 'serialized:' | 'systemSku' | 'tax' | 'taxClassID' | 'timeStamp' | 'upc';
+export declare type ItemsSearchParams = {
+    [k in ItemParams]?: SearchParam | string;
+};
 declare type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 export declare type PostCustomer = Optional<Customer, 'customerID' | 'createTime' | 'timeStamp' | 'archived'>;
 export declare type AccessTokenResponse = {
